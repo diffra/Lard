@@ -1,0 +1,10 @@
+version: '3'
+
+services:
+  lard:
+    build: .
+    # other service configuration
+    ports:
+      - "8002:8000" # port mapping
+    volumes:
+      - "./data:/data" # config directory for radarr

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Lard: A Redirect Daemon</title>
+	<!-- CUSTOM CSS  -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400&family=Roboto:wght@300;400;500;700&display=swap');
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html,body{
+            background: #045D5D;
+            font-family: 'Roboto', sans-serif;
+        }
+        .container{
+            max-width: 600px;
+            margin: 120px auto;
+
+        }
+        .form-card{
+            background: #fff;
+            padding:10px 20px 30px 20px;
+            box-shadow: 2px 3px 11px 3px #00000069;
+        }
+        .form-card .text-center{
+            text-align: center;
+        }
+        .form-card .text-center h1{
+            margin:20px 0;
+        }
+        .input-group{
+            margin: 30px 0;
+        }
+        .input-group label{
+            padding: 10px 5px;
+        }
+        .input-group .form-control{
+            display: block;
+            width: 100%;
+            padding: 10px 5px;
+            margin-top: 7px;
+
+        }
+        .submit-btn .btn-dark{
+            padding: 15px 35px;
+            background: #045D5D;
+            color: #fff;
+            border: none;
+        }
+        #output {
+            display: block;
+            font-size: large;
+            height: 20px;
+            margin-top: 5px;
+            text-align: center;
+        }
+        #output a {
+            color: black;
+            text-decoration: none;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+    $(document).ready(function(){
+        $("form").submit(function(e){
+            e.preventDefault();
+            var formData = {
+                "url": $("input[name='url']").val(),
+                "key": $("input[name='key']").val()
+            };
+            $.ajax({
+            type: "POST",
+            url: "/create",
+            data: JSON.stringify(formData),
+            contentType: "application/json; charset=UTF-8",
+            success: function(response){
+            $("#output").empty();
+            var link = $("<a>").attr("href", response).text(response);
+            $("#output").append(link);
+            }
+            });
+        });
+    });
+    </script>
+	<div id="url-shortner">
+		<!-- CONTAINER WITH MAX-WIDTH 600  -->
+			<div class="container">
+				<!-- FORM CARD WITH WHITE BG -->
+			<div class="form-card">
+				<div class="text-center"><h1>LARD: A Redirect Daemon</h1></div>
+				<!-- FORM  -->
+				<form action="">
+					<!-- INPUT FOR URL -->
+				<div class="input-group">
+					<label for="">URL To Shorten</label>
+					<input type="text" name="url" class="form-control" placeholder="Paste URL here..">
+				</div>
+                <!-- INPUT FOR API KEY  -->
+				<div class="input-group">
+					<label for="">Password</label>
+					<input type="text" name="key" class="form-control" placeholder="Enter your password">
+				</div>
+                <!-- SUBMIT BUTTON  -->
+				<div class="submit-btn">
+					<input type="submit" name="submit" value="Submit" class="btn-dark">
+				</div>
+                 <!-- INPUT FOR SHORTENED URL  -->
+                 <div id="output"></div>
+			</form>   <!-- FORM CLOSE -->
+
+			</div>  <!-- FORM-CARD CLOSE  -->
+		</div>   <!-- CONTAINER CLOSE -->
+	
+	</div>
+</body>
+</html>
