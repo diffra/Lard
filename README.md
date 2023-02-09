@@ -29,7 +29,20 @@ version: '3'
 
 ## Configuration
 
-The configuration for the application is stored in the file `./data/config.ini`. The following sections and options are available:
+The configuration for the application is stored in the file `./data/config.ini`. Create the folder 'data' and config.ini file within. The contents should look like this:
+
+```
+[General]
+ baseurl  = https://l.afsd.cc
+ length   = 5
+ 
+ [Auth]
+ password = lard
+
+```
+
+
+The following sections and options are available:
 
 ### General
 - `baseurl`: the base URL for the service.
@@ -38,16 +51,11 @@ The configuration for the application is stored in the file `./data/config.ini`.
 ### Auth
 - `password`: the password to create a new link. 
 
-To generate a new API Key: 
-
-**Mac or linux:** `head /dev/urandom | LC_ALL=C tr -dc 'a-zA-Z0-9' | fold -w 20 | head -n 1 | base64`
-
-**Windows Powershell:** `[Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes([System.Guid]::NewGuid().ToString().Substring(0, 20)))`
 
 ## Bookmarklet
 
 Use the following bookmarklet to create a short URL for the current page:
-
+TODO: test this
 ```
 javascript:(function() {
   const baseUrl = "https://your-lard-application.com/create";
@@ -75,4 +83,4 @@ This endpoint returns a simple HTML page with a form.
 This endpoint allows you to create a new redirect. The following parameters are supported:
 
 - `url`: The URL to redirect to.
-- `key`: The api key.
+- `key`: The password
