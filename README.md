@@ -33,7 +33,7 @@ The configuration for the application is stored in the file `./data/config.ini`.
 
 ```
 [General]
- baseurl  = https://l.afsd.cc
+ baseurl  = https://l.yourdomain.com
  length   = 5
 
 [Auth]
