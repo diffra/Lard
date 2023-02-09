@@ -19,7 +19,7 @@ To use LARD, it is strongly recommended to use docker-compose.
 version: '3'
  services:
    lard:
-     build: .
+     image: diffra/lard
      # other service configuration
      ports:
        - "8002:8000" # port mapping
@@ -36,7 +36,7 @@ The configuration for the application is stored in the file `./data/config.ini`.
 - `length`: the length for shortened URL.
 
 ### Auth
-- `key`: the API key to access the service, with a maximum length of 100 characters and encoded in base64 format. 
+- `password`: the password to create a new link. 
 
 To generate a new API Key: 
 
@@ -68,7 +68,7 @@ javascript:(function() {
 
 ### `GET /`
 
-This endpoint returns a simple HTML page with a message indicating that LARD is running.
+This endpoint returns a simple HTML page with a form.
 
 ### `POST /create`
 
