@@ -35,8 +35,8 @@ The configuration for the application is stored in the file `./data/config.ini`.
 [General]
  baseurl  = https://l.afsd.cc
  length   = 5
- 
- [Auth]
+
+[Auth]
  password = lard
 
 ```
