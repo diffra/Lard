@@ -51,27 +51,6 @@ The following sections and options are available:
 ### Auth
 - `password`: the password to create a new link. 
 
-
-## Bookmarklet
-
-Use the following bookmarklet to create a short URL for the current page:
-TODO: test this
-```
-javascript:(function() {
-  const baseUrl = "https://your-lard-application.com/create";
-  const apiKey = "your-api-key";
-  const currentUrl = encodeURIComponent(window.location.href);
-  fetch(`${baseUrl}?key=${apiKey}&url=${currentUrl}`)
-    .then(response => response.json())
-    .then(data => {
-      const shortUrl = data.shortUrl;
-      navigator.clipboard.writeText(shortUrl).then(() => {
-        alert("The short URL has been copied to your clipboard.");
-      });
-    });
-})();
-```
-
 ## Endpoints
 
 ### `GET /`
