@@ -63,3 +63,5 @@ This endpoint allows you to create a new redirect. The following parameters are 
 
 - `url`: The URL to redirect to.
 - `key`: The password
+
+HTML/CSS layout thanks to Smart Developers.
