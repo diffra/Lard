@@ -66,58 +66,30 @@
     </style>
 </head>
 <body>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-    $(document).ready(function(){
-        $("form").submit(function(e){
-            e.preventDefault();
-            var formData = {
-                "url": $("input[name='url']").val(),
-                "key": $("input[name='key']").val()
-            };
-            $.ajax({
-            type: "POST",
-            url: "/create",
-            data: JSON.stringify(formData),
-            contentType: "application/json; charset=UTF-8",
-            success: function(response){
-            $("#output").empty();
-            var link = $("<a>").attr("href", response).text(response);
-            $("#output").append(link);
-            }
-            });
-        });
-    });
-    </script>
-	<div id="url-shortner">
-		<!-- CONTAINER WITH MAX-WIDTH 600  -->
-			<div class="container">
-				<!-- FORM CARD WITH WHITE BG -->
-			<div class="form-card">
-				<div class="text-center"><h1>LARD: A Redirect Daemon</h1></div>
-				<!-- FORM  -->
-				<form action="">
-					<!-- INPUT FOR URL -->
-				<div class="input-group">
-					<label for="">URL To Shorten</label>
-					<input type="text" name="url" class="form-control" placeholder="Paste URL here..">
-				</div>
-                <!-- INPUT FOR API KEY  -->
-				<div class="input-group">
-					<label for="">Password</label>
-					<input type="text" name="key" class="form-control" placeholder="Enter your password">
-				</div>
-                <!-- SUBMIT BUTTON  -->
-				<div class="submit-btn">
-					<input type="submit" name="submit" value="Submit" class="btn-dark">
-				</div>
-                 <!-- INPUT FOR SHORTENED URL  -->
-                 <div id="output"></div>
-			</form>   <!-- FORM CLOSE -->
-
-			</div>  <!-- FORM-CARD CLOSE  -->
-		</div>   <!-- CONTAINER CLOSE -->
-	
-	</div>
+    <h1>Admin Dashboard</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Short URL</th>
+                <th>Long URL</th>
+                <th>Views</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in entries %}
+            <tr>
+                <td>{{ entry.short }}</td>
+                <td>{{ entry.long }}</td>
+                <td>{{ entry.views }}</td>
+                <td>
+                    <button>Edit</button>
+                    <button>Delete</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </body>
+
 </html>
