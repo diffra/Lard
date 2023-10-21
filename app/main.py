@@ -111,9 +111,17 @@ async def createlink(data: dict):
 
 @app.get("/")
 async def read_root():
-    with open("/app/index.html") as f:
+    with open("/app/templates/index.html") as f:
         html = f.read()
     return HTMLResponse(html)
+
+@app.get("/admin")
+def admin(request: Request):
+    with sqlite3.connect('data/lard.db') as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM links")
+        entries = cursor.fetchall()
+    return templates.TemplateResponse("admin.html", {"request": request, "entries": entries})
 
 @app.get("/{path}")
 async def redirect(path = None):
