@@ -134,7 +134,7 @@ async def createlink(data: dict):
         return f"{baseurl}/{short}"
 
 @app.delete("/delete/{id}")
-async def deletelink(id: int):
+async def deletelink(id: int, username: str = Depends(verify_credentials)):
     try:
         with sqlite3.connect('/data/lard.db') as conn:
             cursor = conn.cursor()
