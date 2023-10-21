@@ -4,12 +4,17 @@ import random
 import re
 import sqlite3
 import string
+import hashlib
+import bcrypt
 from datetime import datetime
 
-from fastapi import Depends, FastAPI
+from fastapi import Depends, FastAPI, Request, HTTPException, BackgroundTasks, status
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from starlette.responses import RedirectResponse
+from fastapi.templating import Jinja2Templates
+
+security = HTTPBasic()
 
 
 def get_config():
@@ -20,6 +25,10 @@ def get_config():
 def get_password():
     config = get_config()
     return config.get('Auth', 'password')
+
+def get_admin():
+    config = get_config()
+    return config.get('Auth', 'admin')
 
 def get_baseurl():
     config = get_config()
@@ -54,7 +63,22 @@ def generate_shorturl():
             return generate_shorturl()
         return short
 
-def update_link_on_view(conn, short_url):
+def verify_credentials(credentials: HTTPBasicCredentials = Depends(security)):
+    admin_data = get_admin().split(":")
+    correct_username = admin_data[0]
+    correct_password_hash = admin_data[1].encode('utf-8')
+
+    if credentials.username == correct_username and bcrypt.checkpw(credentials.password.encode('utf-8'), correct_password_hash):
+        return credentials.username
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+            headers={"WWW-Authenticate": "Basic"},
+        )
+def update_link_on_view(short_url):
+    conn = sqlite3.connect('/data/lard.db')
+
     # Connect to the database
     cur = conn.cursor()
     
@@ -64,7 +88,7 @@ def update_link_on_view(conn, short_url):
     # Update the views and last fields
     cur.execute("UPDATE links SET views = views + 1, last = ? WHERE short = ?", (timestamp, short_url))
     conn.commit()
-
+    conn.close()
 
 # Create schema if not exists
 if not database_exists('/data/lard.db'):
@@ -87,7 +111,7 @@ if not database_exists('/data/lard.db'):
         print("Error creating database:", e)
 
 app = FastAPI()
-security = HTTPBasic()
+
 
 
 @app.post("/create")
@@ -109,14 +133,37 @@ async def createlink(data: dict):
             conn.commit()
         return f"{baseurl}/{short}"
 
+@app.delete("/delete/{id}")
+async def deletelink(id: int, username: str = Depends(verify_credentials)):
+    try:
+        with sqlite3.connect('/data/lard.db') as conn:
+            cursor = conn.cursor()
+            cursor.execute("DELETE FROM links WHERE id=?", (id,))
+            conn.commit()
+        return {"message": "Entry deleted successfully"}
+    except Exception as e:
+       print(e)
+       return {"message": f"Error: {str(e)}"}
+
+
 @app.get("/")
 async def read_root():
-    with open("/app/index.html") as f:
+    with open("/app/templates/index.html") as f:
         html = f.read()
     return HTMLResponse(html)
 
+templates = Jinja2Templates(directory="/app/templates")
+
+@app.get("/admin")
+def admin(request: Request, username: str = Depends(verify_credentials)):
+    with sqlite3.connect('/data/lard.db') as conn:
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM links")
+        entries = cursor.fetchall()
+    return templates.TemplateResponse("admin.html", {"request": request, "entries": entries})
+
 @app.get("/{path}")
-async def redirect(path = None):
+async def redirect(path = None, background_tasks: BackgroundTasks = None):
     conn = sqlite3.connect('/data/lard.db')
 
     # Create a cursor
@@ -126,7 +173,7 @@ async def redirect(path = None):
     rows = cursor.fetchall()
     
     if len(rows) == 1:
-        update_link_on_view(conn, path)
+        background_tasks.add_task(update_link_on_view, path)
         conn.close()
         return RedirectResponse(url=rows[0][0], status_code=301)
     else:

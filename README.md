@@ -38,6 +38,9 @@ The configuration for the application is stored in the file `./data/config.ini`.
 
 [Auth]
  password = lard
+ #bcrypted admin:password
+ #To generate a username:password string, see: https://hostingcanada.org/htpasswd-generator/ or run `htpasswd -nBC 10 admin`
+ admin = admin:$2y$10$TGVz8YgPBXggJAf.BjOjHeMls59VXI7g7bGLLX9zF4uvHJcM8nKjG
 
 ```
 
@@ -57,11 +60,24 @@ The following sections and options are available:
 
 This endpoint returns a simple HTML page with a form.
 
+### `GET /admin`
+
+This password-protected HTML endpoint returns a list of links within the system with delete capability.
+
 ### `POST /create`
 
 This endpoint allows you to create a new redirect. The following parameters are supported:
 
 - `url`: The URL to redirect to.
 - `key`: The password
+
+### `DELETE /delete/{id}`
+
+This endpoint deletes an existing link:
+
+{id} is the database id of the link to be deleted.
+
+Requires same auth as admin
+
 
 HTML/CSS layout thanks to Smart Developers.
