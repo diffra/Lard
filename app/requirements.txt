@@ -3,3 +3,4 @@ uvicorn
 configparser
 starlette
 jinja2
+bcrypt
