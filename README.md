@@ -11,7 +11,7 @@ URLs find a path
 
 LARD is a redirect daemon that can be used to redirect incoming HTTP requests to different URLs.
 
-![user interface](https://github.com/diffra/Lard/Interface.png)
+![user interface](https://raw.githubusercontent.com/diffra/Lard/master/Interface.png)
 
 ## Usage
 
