@@ -11,6 +11,8 @@ URLs find a path
 
 LARD is a redirect daemon that can be used to redirect incoming HTTP requests to different URLs.
 
+![user interface](https://github.com/diffra/Lard/Interface.png)
+
 ## Usage
 
 To use LARD, it is strongly recommended to use docker-compose.
